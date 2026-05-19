@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AutoElite — Formulário</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --black: #0a0a0a; --dark: #111; --card: #161616;
+            --border: #2a2a2a; --gold: #c9a84c; --gold-light: #e8c96a;
+            --white: #f0ede8; --muted: #777;
+        }
+        body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+        nav {
+            background: var(--dark); border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem; display: flex; align-items: center;
+            justify-content: space-between; height: 64px;
+        }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--gold); }
+        .logo span { color: var(--white); }
+        nav a { color: var(--muted); text-decoration: none; font-size: .82rem; letter-spacing: 1px; text-transform: uppercase; transition: color .2s; }
+        nav a:hover { color: var(--gold); }
+
+        .page {
+            max-width: 680px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            animation: slideUp .4s ease both;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            letter-spacing: 4px;
+            color: var(--white);
+            margin-bottom: .25rem;
+        }
+        .page-title span { color: var(--gold); }
+        .page-sub { color: var(--muted); font-size: .85rem; margin-bottom: 2.5rem; }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2.5rem;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .grid-1 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+
+        .field { display: flex; flex-direction: column; gap: .5rem; }
+        label {
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+        input {
+            background: #0e0e0e;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .95rem;
+            padding: .8rem 1rem;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,.1);
+        }
+        input::placeholder { color: #444; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        .actions { display: flex; gap: 1rem; justify-content: flex-end; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .75rem 1.8rem;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .82rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: var(--gold);
+            color: var(--black);
+        }
+        .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Auto<span>Elite</span></div>
+    <a th:href="@{/veiculos}">← Voltar</a>
+</nav>
+
+<div class="page">
+    <h1 class="page-title" th:text="${veiculos.id} ? 'Editar <span>Veículo</span>' : 'Novo <span>Veículo</span>'">
+        Novo <span>Veículo</span>
+    </h1>
+    <p class="page-sub" th:text="${veiculos.id} ? 'Atualize os dados do veículo abaixo.' : 'Preencha os dados para cadastrar um novo veículo.'">
+        Preencha os dados abaixo
+    </p>
+
+    <div class="card">
+        <form th:action="@{/veiculos/salvar}" th:object="${veiculos}" method="post">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="grid-2">
+                <div class="field">
+                    <label for="marca">Marca</label>
+                    <input type="text" id="marca" th:field="*{marca}" placeholder="Ex: Nissan" required/>
+                </div>
+                <div class="field">
+                    <label for="modelo">Modelo</label>
+                    <input type="text" id="modelo" th:field="*{modelo}" placeholder="Ex: Skyline R34" required/>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:1.25rem">
+                <div class="field">
+                    <label for="ano">Ano</label>
+                    <input type="number" id="ano" th:field="*{ano}" placeholder="Ex: 1999" min="1900" max="2099" required/>
+                </div>
+                <div class="field">
+                    <label for="preco">Preço (R$)</label>
+                    <input type="number" id="preco" th:field="*{preco}" placeholder="Ex: 300000" step="0.01" min="0" required/>
+                </div>
+            </div>
+
+            <hr class="divider"/>
+
+            <div class="actions">
+                <a th:href="@{/veiculos}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">
+                    <span th:text="${veiculos.id} ? 'Salvar Alterações' : 'Cadastrar Veículo'">Cadastrar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pr-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AutoElite - Frota</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neuse&family=DM+Sans:wgh@300;400;500&display=sway" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --black: #0a0a0a;
+            --dark: #111111;
+            --card: #181818;
+            --border: #2a2a2a;
+            --gold: #c9a84c;
+            --white: #f0ede8;
+            --muted: #888;
+            --red: #c0392b;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: var(--dark);
+            border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue' sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            color: var(--gold);
+        }
+
+        .logo span { color: var(--white); }
+        nav a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: .85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color .2s;
+        }
+        nav a:hover { color: var(--gold); }
+
+        .hero {
+            background: linear-gradient(135deg, #111 0%, #1a1500 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 2.5rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: 'AUTO ELITE';
+            position: absolute;
+            right: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 9rem;
+            color: rgba(201,168,76,.05);
+            letter-spacing: 8px;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 4px;
+            color: var(--white);
+            line-height: 1;
+        }
+        .hero h1 span { color: var(--gold); }
+        .hero p {
+            color: var(--muted);
+            font-size: .9rem;
+            margin-top: .5rem;
+            letter-spacing: .5px;
+        }
+
+        .toolbar {
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        .count {
+            font-size: .8rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .count strong { color: var(--gold); font-size: 1rem; }
+
+        .btn-new {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--gold);
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: .82rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: .65rem 1.4rem;
+            border-radius: 2px;
+            transition: background .2s, transform .15s;
+        }
+        .btn-new:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+        .table-wrap {
+            padding: 0 2.5rem 3rem;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: .88rem;
+        }
+        thead tr {
+            border-bottom: 2px solid var(--gold);
+        }
+        th {
+            text-align: left;
+            padding: .9rem 1.2rem;
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background .15s;
+            animation: fadeRow .4s ease both;
+        }
+        tbody tr:hover { background: var(--card); }
+
+        @keyframes fadeRow {
+            from { opacity: 0; transform: translateX(-8px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        tbody tr:nth-child(1) { animation-delay: .05s }
+        tbody tr:nth-child(2) { animation-delay: .10s }
+        tbody tr:nth-child(3) { animation-delay: .15s }
+        tbody tr:nth-child(4) { animation-delay: .20s }
+        tbody tr:nth-child(5) { animation-delay: .25s }
+
+        td {
+            padding: 1rem 1.2rem;
+            color: var(--white);
+            vertical-align: middle;
+        }
+        td.id { color: var(--muted); font-size: .78rem; }
+        td.marca { font-weight: 500; }
+        td.preco {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .25rem .7rem;
+            border-radius: 2px;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: rgba(201,168,76,.12);
+            color: var(--gold);
+            border: 1px solid rgba(201,168,76,.3);
+        }
+
+        .actions { display: flex; gap: .5rem; align-items: center; }
+        .btn-action {
+            text-decoration: none;
+            padding: .4rem .9rem;
+            border-radius: 2px;
+            font-size: .75rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all .15s;
+            cursor: pointer;
+            border: none;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-details {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+        .btn-details:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-edit {
+            background: rgba(201,168,76,.1);
+            border: 1px solid rgba(201,168,76,.3);
+            color: var(--gold);
+        }
+        .btn-edit:hover { background: rgba(201,168,76,.2); }
+        .btn-del {
+            background: rgba(192,57,43,.1);
+            border: 1px solid rgba(192,57,43,.3);
+            color: #e74c3c;
+        }
+        .btn-del:hover { background: rgba(192,57,43,.25); }
+
+
+        .empty {
+            text-align: center;
+            padding: 5rem 2rem;
+            color: var(--muted);
+        }
+        .empty .icon { font-size: 3rem; margin-bottom: 1rem; opacity: .3; }
+        .empty p { font-size: .9rem; }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Auto<span>Elite</span></div>
+    <a th:href="@{/veiculos/novo}">+ Cadastrar</a>
+</nav>
+
+<div class="hero">
+    <h1>Nossa <span>Frota</span></h1>
+    <p>Veículos disponíveis para venda</p>
+</div>
+
+<div class="toolbar">
+    <div class="count">
+        <strong th:text="${veiculos.size()}">0</strong> veículos cadastrados
+    </div>
+    <a th:href="@{/veiculos/novo}" class="btn-new">＋ Novo Veículo</a>
+</div>
+
+<div class="table-wrap">
+    <div class="empty" th:if="${veiculos.empty}">
+        <div class="icon">🚗</div>
+        <p>Nenhum veículo cadastrado ainda.</p>
+    </div>
+
+    <table th:unless="${veiculos.empty}">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Ano</th>
+            <th>Preço</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="v : ${veiculos}">
+            <td class="id" th:text="${v.id}">1</td>
+            <td class="marca" th:text="${v.marca}">Nissan</td>
+            <td th:text="${v.modelo}">Skyline R34</td>
+            <td th:text="${v.ano}">1999</td>
+            <td class="preco" th:text="'R$ ' + ${#numbers.formatDecimal(v.preco, 1, 'POINT', 2, 'COMMA')}">R$ 300.000</td>
+            <td><span class="badge">Disponível</span></td>
+            <td class="actions">
+                <a th:href="@{/veiculos/detalhes/{id}(id=${v.id})}" class="btn-action btn-details">Ver</a>
+                <a th:href="@{/veiculos/editar/{id}(id=${v.id})}" class="btn-action btn-edit">Editar</a>
+                <a th:href="@{/veiculos/deletar/{id}(id=${v.id})}" class="btn-action btn-del"
+                   onclick="return confirm('Excluir este veículo?')">Excluir</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
+
+
+
+
+

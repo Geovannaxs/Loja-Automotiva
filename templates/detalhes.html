@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AutoElite — Detalhes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --black: #0a0a0a; --dark: #111; --card: #161616;
+            --border: #2a2a2a; --gold: #c9a84c; --gold-light: #e8c96a;
+            --white: #f0ede8; --muted: #777;
+        }
+        body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+        nav {
+            background: var(--dark); border-bottom: 1px solid var(--border);
+            padding: 0 2.5rem; display: flex; align-items: center;
+            justify-content: space-between; height: 64px;
+        }
+        .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px; color: var(--gold); }
+        .logo span { color: var(--white); }
+        nav a { color: var(--muted); text-decoration: none; font-size: .82rem; letter-spacing: 1px; text-transform: uppercase; transition: color .2s; }
+        nav a:hover { color: var(--gold); }
+
+        .page {
+            max-width: 760px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            animation: slideUp .4s ease both;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+
+        .hero-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #1a1500 0%, #111 60%, #0a0a0a 100%);
+            padding: 3rem 2.5rem 2rem;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-banner::after {
+            content: '🚘';
+            position: absolute;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 5rem;
+            opacity: .1;
+        }
+        .tag {
+            display: inline-block;
+            background: rgba(201,168,76,.15);
+            border: 1px solid rgba(201,168,76,.3);
+            color: var(--gold);
+            font-size: .7rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: .25rem .8rem;
+            border-radius: 2px;
+            margin-bottom: 1rem;
+        }
+        .car-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            color: var(--white);
+            line-height: .95;
+        }
+        .car-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+        }
+        .car-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            margin-top: 1rem;
+        }
+
+
+        .specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            padding: 0;
+        }
+        .spec {
+            padding: 1.5rem 2rem;
+            border-right: 1px solid var(--border);
+        }
+        .spec:last-child { border-right: none; }
+        .spec-label {
+            font-size: .68rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: .4rem;
+        }
+        .spec-value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            color: var(--white);
+        }
+
+        .page-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .btn {
+            display: inline-flex; align-items: center;
+            padding: .75rem 1.8rem;
+            border-radius: 2px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .82rem;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: none;
+            transition: all .2s;
+            text-decoration: none;
+        }
+        .btn-edit { background: var(--gold); color: var(--black); }
+        .btn-edit:hover { background: var(--gold-light); transform: translateY(-1px); }
+        .btn-back { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+        .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-del { background: transparent; border: 1px solid rgba(192,57,43,.4); color: #e74c3c; }
+        .btn-del:hover { background: rgba(192,57,43,.15); }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">Auto<span>Elite</span></div>
+    <a th:href="@{/veiculos}">← Frota</a>
+</nav>
+
+<div class="page">
+    <div class="hero-card">
+        <div class="hero-banner">
+            <div class="tag">Disponível</div>
+            <div class="car-brand" th:text="${veiculos.marca}">Nissan</div>
+            <div class="car-name" th:text="${veiculos.modelo}">Skyline R34</div>
+            <div class="car-price" th:text="'R$ ' + ${#numbers.formatDecimal(veiculos.preco, 1, 'POINT', 2, 'COMMA')}">R$ 300.000,00</div>
+        </div>
+        <div class="specs">
+            <div class="spec">
+                <div class="spec-label">ID</div>
+                <div class="spec-value" th:text="'#' + ${veiculos.id}">#1</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Marca</div>
+                <div class="spec-value" th:text="${veiculos.marca}">Nissan</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Modelo</div>
+                <div class="spec-value" th:text="${veiculos.modelo}">Skyline</div>
+            </div>
+            <div class="spec">
+                <div class="spec-label">Ano</div>
+                <div class="spec-value" th:text="${veiculos.ano}">1999</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-actions">
+        <a th:href="@{/veiculos}" class="btn btn-back">← Voltar</a>
+        <a th:href="@{/veiculos/editar/{id}(id=${veiculos.id})}" class="btn btn-edit">✎ Editar</a>
+        <a th:href="@{/veiculos/deletar/{id}(id=${veiculos.id})}" class="btn btn-del"
+           onclick="return confirm('Tem certeza que deseja excluir?')">✕ Excluir</a>
+    </div>
+</div>
+
+</body>
+</html>
+
